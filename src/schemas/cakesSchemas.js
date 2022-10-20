@@ -1,7 +1,15 @@
 import joi from 'joi';
 
-const schema = joi.object({
-
+const schemaCakes = joi.object({
+  name: joi.string().min(2).required(), 
+  price: joi.number().min(1).required(),
+  description: joi.string().min(1).required(),
+  image: joi.string().uri().required(),
+  flavourId : joi.number().min(1).required(),
 });
 
-export {schema};
+const schemaFlavours= joi.object({
+  name: joi.string().min(2).required(),
+});
+
+export {schemaFlavours,schemaCakes};

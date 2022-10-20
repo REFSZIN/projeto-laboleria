@@ -1,7 +1,7 @@
 import { STATUS_CODE } from '../enums/statusCode.js';
 import { COLLECTIONS } from '../enums/collections.js';
 import * as ordersRepository from '../repository/ordersRepository.js';
-import { } from '../schemas/ordersSchemas.js';
+
 
 async function postOrder(req, res) {
   const { any } = req.body;
