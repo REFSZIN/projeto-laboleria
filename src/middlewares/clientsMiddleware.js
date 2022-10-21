@@ -1,35 +1,29 @@
-import { COLLECTIONS } from '../enums/collections.js';
 import { STATUS_CODE } from '../enums/statusCode.js';
-import {schemaClients} from '../schemas/clientsSchemas.js';
-import connection from '../db/db.js';
+import { schemaClients } from '../schemas/clientsSchemas.js';
+
 
 async function clientsMiddleware(req, res, next) {
-  const token = req.headers.authorization?.replace('Bearer ', '');
-
-  if (!token) {
-    return res.send(STATUS_CODE.BAD_REQUEST);
+  const { name, address, phone} = req.body;
+  const newClient = {
+    name, address, phone
+  };
+  const valid = schemaClients.validate(newCake, {abortEarly: false});
+  if(valid.errorMessage){
+    const erros = validation.error.details.map((err) => err.message);
+    res.status(STATUS_CODE.ERRORBADREQUEST).send(
+      `Todos os campos são obrigatórios! : ${erros}`
+      ); 
+    return res.send(STATUS_CODE.UNAUTHORIZED);
   }
-
   try {
-    const session = await connection.query( `
-    SELECT * FROM ${COLLECTIONS.SESSIONS} WHERE token LIKE $1;
-    `,
-      [`${token}`]
-    );
-
-    if (!session) {
-      return res.send(STATUS_CODE.UNAUTHORIZED);
+    if (
+      name === null || name === undefined || name.typeof !== 'string' ||
+      address === null || address === undefined || address.typeof !== 'string'|| address.typeof !== 'string' ||
+      phone === null || phone === undefined || phone.typeof !== 'string' ||
+      phone.length === 0 || address.length === 0 || name.length === 0 || phone.length > 11 || phone.length < 10 ) {
+      return res.send(STATUS_CODE.ERRORBADREQUEST);
     }
-
-    const user = await connection.query( `
-    SELECT * FROM ${COLLECTIONS.USERS} WHERE id LIKE $1;
-    `,
-      [`${session.userId}`]
-    );
-
-    res.locals.session = session;
-    res.locals.user = user;
-
+    res.locals.client = newClient;
     next();
   } catch (error) {
     console.log(error);

@@ -4,32 +4,36 @@ import connection from '../db/db.js';
 import {schemaOrders } from '../schemas/ordersSchemas.js';
 
 async function ordersMiddleware(req, res, next) {
-  const token = req.headers.authorization?.replace('Bearer ', '');
-
-  if (!token) {
-    return res.send(STATUS_CODE.BAD_REQUEST);
+  const { clientId,cakeId,quantity,totalPrice } = req.body;
+  const newOrder = {
+    clientId,cakeId,quantity,totalPrice
   }
-
+  const valid = schemaOrders.validate(newOrder, {abortEarly: false});
+  if(valid.errorMessage){
+    const erros = validation.error.details.map((err) => err.message);
+    res.status(STATUS_CODE.ERRORBADREQUEST).send(
+      `Todos os campos são obrigatórios! : ${erros}`
+      ); 
+    return res.send(STATUS_CODE.UNAUTHORIZED);
+  }
   try {
-    const session = await connection.query( `
-    SELECT * FROM ${COLLECTIONS.SESSIONS} WHERE token LIKE $1;
+    const HaveClient = await connection.query( `
+      SELECT * FROM ${COLLECTIONS.CLIENTS} WHERE id = $1;
     `,
-      [`${token}`]
+      [`${clientId}`]
     );
-
-    if (!session) {
-      return res.send(STATUS_CODE.UNAUTHORIZED);
+    const HaveCake = await connection.query( `
+      SELECT * FROM ${COLLECTIONS.CAKES} WHERE id = $1;
+    `,
+    [`${cakeId}`]
+    );
+    if (!HaveClient.rowCount || !HaveCake.rowCount) {
+      return res.send(STATUS_CODE.ERRORNOTFOUND);
     }
-
-    const user = await connection.query( `
-    SELECT * FROM ${COLLECTIONS.USERS} WHERE id LIKE $1;
-    `,
-      [`${session.userId}`]
-    );
-
-    res.locals.session = session;
-    res.locals.user = user;
-
+    if (quantity.typeof !== 'number'|| quantity > 0 || quantity <= 5 || totalPrice.typeof !== 'number') {
+      return res.send(STATUS_CODE.ERRORBADREQUEST);
+    }
+    res.locals.order = newOrder;
     next();
   } catch (error) {
     console.log(error);

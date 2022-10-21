@@ -1,18 +1,27 @@
 import connection from '../db/db.js';
-import * as ordersRepository from './ordersRepository.js';
+import { COLLECTIONS } from '../enums/collections.js';
 
-async function getUrl(shortUrl) {
-  const result = await connection.query(
-    `SELECT * FROM shortens WHERE shorturl = $1;`,
-    [shortUrl]
+async function postNewCake(image,name,flavourId,price,description) {
+  return connection.query(
+    `
+    INSERT INTO ${COLLECTIONS.USERS} 
+      (image, name, flavourId, price, description)
+    VALUES 
+      ($1, $2, $3, $4, $5);
+  `,
+    [`${image}`,`${name}`,`${flavourId}`,`${price}`,`${description}`]
   );
-
-  if (result.rowCount > 0) {
-    const shortId = result.rows[0].id;
-    ordersRepository.upsertVisit(shortId);
-  }
-
-  return result;
+}
+async function postNewFlavours(name) {
+  return connection.query(
+    `
+    INSERT INTO ${COLLECTIONS.FLAVOURS} 
+      (name)
+    VALUES 
+      ($1);
+  `,
+    [`${name}`]
+  );
 }
 
-export { getUrl };
+export { postNewCake,postNewFlavours };

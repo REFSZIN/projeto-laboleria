@@ -1,35 +1,45 @@
 import { COLLECTIONS } from '../enums/collections.js';
 import { STATUS_CODE } from '../enums/statusCode.js';
 import connection from '../db/db.js';
-import {schemaCakes} from '../schemas/cakesSchemas.js';
+import { schemaCakes } from '../schemas/cakesSchemas.js';
 
 async function cakesMiddleware(req, res, next) {
-  const token = req.headers.authorization?.replace('Bearer ', '');
-
-  if (!token) {
-    return res.send(STATUS_CODE.BAD_REQUEST);
+  const { name, price, image, description,flavourId } = req.body;
+  const newCake = {
+    name, price, image, description, flavourId
+  };
+  const valid = schemaCakes.validate(newCake, {abortEarly: false});
+  if(valid.errorMessage){
+    const erros = validation.error.details.map((err) => err.message);
+    res.status(STATUS_CODE.ERRORBADREQUEST).send(
+      `Todos os campos são obrigatórios! : ${erros}`
+      ); 
+    return res.send(STATUS_CODE.UNAUTHORIZED);
   }
-
   try {
-    const session = await connection.query( `
-    SELECT * FROM ${COLLECTIONS.SESSIONS} WHERE token LIKE $1;
+    const SameCake = await connection.query( `
+      SELECT * FROM ${COLLECTIONS.CAKES} WHERE name LIKE $1;
     `,
-      [`${token}`]
+      [`${name}`]
     );
-
-    if (!session) {
-      return res.send(STATUS_CODE.UNAUTHORIZED);
+    if (SameCake.rows[0].name === name) {
+      return res.send(STATUS_CODE.ERRORCONFLICT);
     }
-
-    const user = await connection.query( `
-    SELECT * FROM ${COLLECTIONS.USERS} WHERE id LIKE $1;
+    const HaveFlavours = await connection.query( `
+      SELECT * FROM ${COLLECTIONS.FLAVOURS} WHERE id = $1;
     `,
-      [`${session.userId}`]
+      [`${flavourId}`]
     );
-
-    res.locals.session = session;
-    res.locals.user = user;
-
+    if (!HaveFlavours.rowCount) {
+      return res.send(STATUS_CODE.ERRORNOTFOUND);
+    }
+    if (price <= 0 || price === null || price === undefined || description.typeof !== 'string') {
+      return res.send(STATUS_CODE.ERRORBADREQUEST);
+    }
+    if (image.length === 0) {
+      return res.send(STATUS_CODE.ERRORUNPROCESSABLEENTITY);
+    }
+    res.locals.cake = newCake;
     next();
   } catch (error) {
     console.log(error);

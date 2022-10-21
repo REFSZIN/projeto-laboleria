@@ -1,22 +1,21 @@
 import { STATUS_CODE } from '../enums/statusCode.js';
-import { COLLECTIONS } from '../enums/collections.js';
 import * as ordersRepository from '../repository/ordersRepository.js';
 
 
 async function postOrder(req, res) {
-  const { any } = req.body;
-
+  const {clientId,cakeId,quantity,totalPrice}=req.locals.order;
   try {
-
-    res.status(STATUS_CODE.SUCCESSOK).send(body);
+    ordersRepository.postNewOrder(clientId,cakeId,quantity,totalPrice);
+    res.status(STATUS_CODE.SUCCESSCREATED).send("Order Boladão Criado");
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVERERRORINTERNAL);
   }
 }
 async function getOrders(req, res) {
-  const { any } = req.body;
-
+  const { id } = req.body;
+  if(isNaN(parseInt(id))) return res.sendStatus(STATUS_CODE.ERRORUNPROCESSABLEENTITY);
   try {
+    ordersRepository.getOrders(id);
 
     res.status(STATUS_CODE.SUCCESSOK).send(body);
   } catch (error) {
@@ -24,9 +23,10 @@ async function getOrders(req, res) {
   }
 }
 async function getOrder(req, res) {
-  const { any } = req.body;
-
+  const { id } = req.params;
+  if(isNaN(parseInt(id))) return res.sendStatus(STATUS_CODE.ERRORUNPROCESSABLEENTITY);
   try {
+    ordersRepository.getOrder(id);
 
     res.status(STATUS_CODE.SUCCESSOK).send(body);
   } catch (error) {
@@ -34,10 +34,11 @@ async function getOrder(req, res) {
   }
 }
 async function patchOrder(req, res) {
-  const { any } = req.body;
-
+  const { id } = req.params;
+  if(isNaN(parseInt(id))) return res.sendStatus(STATUS_CODE.ERRORUNPROCESSABLEENTITY);
   try {
-
+    ordersRepository.patchOrder(id);
+    
     res.status(STATUS_CODE.SUCCESSOK).send(body);
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVERERRORINTERNAL);
