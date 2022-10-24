@@ -4,9 +4,9 @@ import { postOrder,getOrders,getOrder,patchOrder } from "../controllers/ordersCo
 
 const router = express.Router();
 
-router.post('/order', ordersMiddleware, postOrder);
+router.post('/order', ordersMiddleware, postOrder); //
 router.get('/orders', getOrders);
 router.get('/orders/:id', getOrder);
 router.patch('/order/:id',  patchOrder);
 
-export default router;
+export default router;  

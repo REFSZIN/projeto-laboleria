@@ -232,22 +232,6 @@ SELECT pg_catalog.setval('public.orders_id_seq', 1, false);
 
 
 --
--- Name: cakes cakes_image_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.cakes
-    ADD CONSTRAINT cakes_image_key UNIQUE (image);
-
-
---
--- Name: cakes cakes_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.cakes
-    ADD CONSTRAINT cakes_name_key UNIQUE (name);
-
-
---
 -- Name: cakes cakes_pk; Type: CONSTRAINT; Schema: public; Owner: -
 --
 

@@ -16,8 +16,8 @@ async function postNewClient(name, phone, address) {
 
 async function HaveUserOrder(id) {
   const list = await connection.query(`
-      SELECT * FROM  ${COLLECTIONS.ORDERS} o
-      WHERE o.clientId = $1`,
+      SELECT * FROM  ${COLLECTIONS.ORDERS}
+      WHERE "clientId" = $1`,
     [`${id}`]
   );
   return list;
@@ -25,13 +25,14 @@ async function HaveUserOrder(id) {
 
 async function getClient(id) {
   const client = await connection.query(`
-      SELECT * FROM  ${COLLECTIONS.CLIENTS} o
-      WHERE o.id = $1`,
+      SELECT * FROM ${COLLECTIONS.CLIENTS} 
+      WHERE id = $1`,
     [`${id}`]
   );
   if(client.rowCount === 0){
     return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
   }
+  return client;
 }
 
 export { postNewClient,getClient,HaveUserOrder};

@@ -15,21 +15,16 @@ async function getClientList(req, res) {
   const { id } = req.params;
   if(isNaN(parseInt(id))) return res.sendStatus(STATUS_CODE.ERRORUNPROCESSABLEENTITY);
   try {
-    await clientsRepository.HaveUserOrder(id);
-    const list = await clientsRepository.getClient(id);
+    const Orders = await clientsRepository.HaveUserOrder(id);
+    const Client = await clientsRepository.getClient(id);
     const body = 
     [
-        {
-            "orderId": list.rows[0].id,
-            "quantity": list.rows[0].quantity,
-            "createdAt": list.rows[0].createdAt,
-            "totalPrice": list.rows[0].totalPrice,
-            "cakeName": list.rows[0].name
-        }
+      Client.rows,
+      Orders.rows
     ]
-    res.status(STATUS_CODE.SUCCESSOK).send(`List of Client Boladão: `, body);
+    return res.status(STATUS_CODE.SUCCESSOK).send(body);
   } catch (error) {
-    return res.sendStatus(STATUS_CODE.SERVERERRORINTERNAL);
+    return res.status(STATUS_CODE.SERVERERRORINTERNAL);
   }
 }
 

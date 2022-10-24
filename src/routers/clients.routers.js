@@ -4,7 +4,7 @@ import { postClient,getClientList } from "../controllers/clientsControllers.js"
 
 const router = express.Router();
 
-router.post('/clients',clientsMiddleware, postClient);
-router.get('/clients/:id/orders', getClientList);
+router.post('/clients',clientsMiddleware, postClient); //
+router.get('/clients/:id/orders', getClientList); //
 
 export default router;

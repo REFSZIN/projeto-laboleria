@@ -15,15 +15,14 @@ async function postNewOrder(cakeId,clientId,quantity,totalPrice) {
   );
 }
 
-async function getOrders(id) {
+async function getOrders() {
   const Orders = await connection.query(`
-      SELECT * FROM  ${COLLECTIONS.ORDERS} o
-      WHERE o.id = $1`,
-    [`${id}`]
+      SELECT * FROM  ${COLLECTIONS.ORDERS}`
   );
   if(Orders.rowCount === 0){
     return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
   }
+  return Orders;
 }
 
 async function getOrder(id) {
@@ -35,17 +34,19 @@ async function getOrder(id) {
   if(Order.rowCount === 0){
     return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
   }
+  return Order;
 }
 
 async function patchOrder(id) {
   const patch = await connection.query(`
       UPDATE ${COLLECTIONS.ORDERS} o
-      SET  isDelivered = true 
+      SET  "isDelivered" = true 
       WHERE o.id = $1`,
     [`${id}`]
   );
   if(patch.rowCount === 0){
     return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
   }
+  return patch;
 }
 export { postNewOrder,getOrder,getOrders,patchOrder};
