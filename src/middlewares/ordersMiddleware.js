@@ -4,9 +4,9 @@ import connection from '../db/db.js';
 import {schemaOrders } from '../schemas/ordersSchemas.js';
 
 async function ordersMiddleware(req, res, next) {
-  const { clientId,cakeId,quantity,totalPrice } = req.body;
+  const { cakeId,clientId,quantity,totalPrice} = req.body;
   const newOrder = {
-    clientId,cakeId,quantity,totalPrice
+    cakeId,clientId,quantity,totalPrice
   }
   const valid = schemaOrders.validate(newOrder, {abortEarly: false});
   if(valid.errorMessage){
@@ -14,7 +14,7 @@ async function ordersMiddleware(req, res, next) {
     res.status(STATUS_CODE.ERRORBADREQUEST).send(
       `Todos os campos são obrigatórios! : ${erros}`
       ); 
-    return res.send(STATUS_CODE.UNAUTHORIZED);
+    return res.sendStatus(STATUS_CODE.UNAUTHORIZED);
   }
   try {
     const HaveClient = await connection.query( `
@@ -27,17 +27,16 @@ async function ordersMiddleware(req, res, next) {
     `,
     [`${cakeId}`]
     );
-    if (!HaveClient.rowCount || !HaveCake.rowCount) {
-      return res.send(STATUS_CODE.ERRORNOTFOUND);
+    if (HaveClient.rowCount <= 0 || HaveCake.rowCount <= 0) {
+      return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
     }
-    if (quantity.typeof !== 'number'|| quantity > 0 || quantity <= 5 || totalPrice.typeof !== 'number') {
-      return res.send(STATUS_CODE.ERRORBADREQUEST);
+    if (isNaN(parseInt(cakeId))||isNaN(parseInt(clientId))||isNaN(parseInt(quantity))||isNaN(parseInt(totalPrice))) {
+      return res.sendStatus(STATUS_CODE.ERRORBADREQUEST);
     }
-    res.locals.order = newOrder;
     next();
   } catch (error) {
-    console.log(error);
-    return res.send(STATUS_CODE.SERVER_ERROR);
+    console.error(error);
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 }
 

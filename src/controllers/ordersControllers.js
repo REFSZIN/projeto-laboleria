@@ -3,9 +3,9 @@ import * as ordersRepository from '../repository/ordersRepository.js';
 
 
 async function postOrder(req, res) {
-  const {clientId,cakeId,quantity,totalPrice}=req.locals.order;
+  const {cakeId,clientId,quantity,totalPrice}=req.body;
   try {
-    ordersRepository.postNewOrder(clientId,cakeId,quantity,totalPrice);
+    ordersRepository.postNewOrder(cakeId,clientId,quantity,totalPrice);
     res.status(STATUS_CODE.SUCCESSCREATED).send("Order Boladão Criado");
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVERERRORINTERNAL);

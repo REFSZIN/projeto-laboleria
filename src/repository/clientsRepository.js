@@ -5,7 +5,7 @@ import { STATUS_CODE } from '../enums/statusCode.js';
 async function postNewClient(name, phone, address) {
   return connection.query(
     `
-    INSERT INTO ${COLLECTIONS.USERS} 
+    INSERT INTO ${COLLECTIONS.CLIENTS} 
       (name, phone, address)
     VALUES 
       ($1, $2, $3);
@@ -14,7 +14,7 @@ async function postNewClient(name, phone, address) {
   );
 }
 
-async function HaveUser(id) {
+async function HaveUserOrder(id) {
   const list = await connection.query(`
       SELECT * FROM  ${COLLECTIONS.ORDERS} o
       WHERE o.clientId = $1`,
@@ -34,4 +34,4 @@ async function getClient(id) {
   }
 }
 
-export { postNewClient,getClient,HaveUser};
+export { postNewClient,getClient,HaveUserOrder};

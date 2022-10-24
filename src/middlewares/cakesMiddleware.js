@@ -4,26 +4,26 @@ import connection from '../db/db.js';
 import { schemaCakes } from '../schemas/cakesSchemas.js';
 
 async function cakesMiddleware(req, res, next) {
-  const { name, price, image, description,flavourId } = req.body;
+  const { name, price, image, description, flavourId } = req.body;
   const newCake = {
     name, price, image, description, flavourId
   };
-  const valid = schemaCakes.validate(newCake, {abortEarly: false});
-  if(valid.errorMessage){
-    const erros = validation.error.details.map((err) => err.message);
+  const {error} = schemaCakes.validate(newCake, {abortEarly: false});
+  if(error){
+    const erros = error.details.map((err) => err.message);
     res.status(STATUS_CODE.ERRORBADREQUEST).send(
       `Todos os campos são obrigatórios! : ${erros}`
       ); 
-    return res.send(STATUS_CODE.UNAUTHORIZED);
+    return res.sendStatus(STATUS_CODE.ERRORUNAUTHORIZED);
   }
   try {
     const SameCake = await connection.query( `
-      SELECT * FROM ${COLLECTIONS.CAKES} WHERE name LIKE $1;
+      SELECT * FROM ${COLLECTIONS.CAKES} WHERE name = $1;
     `,
       [`${name}`]
     );
-    if (SameCake.rows[0].name === name) {
-      return res.send(STATUS_CODE.ERRORCONFLICT);
+    if (SameCake?.rows[0]?.name === name) {
+      return res.sendStatus(STATUS_CODE.ERRORCONFLICT);
     }
     const HaveFlavours = await connection.query( `
       SELECT * FROM ${COLLECTIONS.FLAVOURS} WHERE id = $1;
@@ -31,19 +31,18 @@ async function cakesMiddleware(req, res, next) {
       [`${flavourId}`]
     );
     if (!HaveFlavours.rowCount) {
-      return res.send(STATUS_CODE.ERRORNOTFOUND);
+      return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
     }
-    if (price <= 0 || price === null || price === undefined || description.typeof !== 'string') {
-      return res.send(STATUS_CODE.ERRORBADREQUEST);
+    if (price <= 0 || price === null || price === undefined) {
+      return res.sendStatus(STATUS_CODE.ERRORBADREQUEST);
     }
     if (image.length === 0) {
-      return res.send(STATUS_CODE.ERRORUNPROCESSABLEENTITY);
+      return res.sendStatus(STATUS_CODE.ERRORUNPROCESSABLEENTITY);
     }
-    res.locals.cake = newCake;
     next();
   } catch (error) {
-    console.log(error);
-    return res.send(STATUS_CODE.SERVER_ERROR);
+    console.error(error);
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 }
 

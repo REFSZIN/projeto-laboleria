@@ -1,15 +1,17 @@
+
 import connection from '../db/db.js';
 import { COLLECTIONS } from '../enums/collections.js';
 
-async function postNewOrder(clientId,cakeId,quantity,totalPrice) {
+async function postNewOrder(cakeId,clientId,quantity,totalPrice) {
+  const t = new Date().toGMTString(); 
   return connection.query(
     `
     INSERT INTO ${COLLECTIONS.ORDERS} 
-      (clientId,cakeId,quantity,totalPrice)
+      ("cakeId","clientId",quantity,"totalPrice","createdAt")
     VALUES 
-      ($1, $2, $3, $4);
+      ($1, $2, $3, $4, $5);
   `,
-    [`${clientId}`,`${cakeId}`,`${quantity}`,`${totalPrice}`]
+    [`${cakeId}`, `${clientId}`,`${quantity}`,`${totalPrice}`,`${t}`]
   );
 }
 

@@ -1,16 +1,22 @@
 import connection from '../db/db.js';
 import { COLLECTIONS } from '../enums/collections.js';
 
-async function postNewCake(image,name,flavourId,price,description) {
-  return connection.query(
-    `
-    INSERT INTO ${COLLECTIONS.USERS} 
-      (image, name, flavourId, price, description)
-    VALUES 
-      ($1, $2, $3, $4, $5);
-  `,
-    [`${image}`,`${name}`,`${flavourId}`,`${price}`,`${description}`]
-  );
+async function postNewCake(name, price, image, description, flavourId) {
+  try {
+    const oi = await connection.query(
+      `
+      INSERT INTO ${COLLECTIONS.CAKES} 
+        (name, price, image, description, "flavourId")
+      VALUES 
+        ($1, $2, $3, $4, $5);
+    `,
+      [`${name}`,`${price}`,`${image}`,`${description}`,`${flavourId}`]
+    );
+    return oi;
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
 }
 async function postNewFlavours(name) {
   return connection.query(
