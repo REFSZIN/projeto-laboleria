@@ -54,31 +54,31 @@ La Boleria is a back-end application, an REST API FULL.
 ### User Sign Up
 
 ```
-https:/projeto16-shortly.vercel.app/
+https://boleria.herokuapp.com
 POST /cakes
 ```
 ```
-https:/projeto16-shortly.vercel.app/
+https://boleria.herokuapp.com
 POST /clients
 ```
 ```
-https:/projeto16-shortly.vercel.app/
+https://boleria.herokuapp.com
 POST /order
 ```
 ```
-https:/projeto16-shortly.vercel.app/
+https://boleria.herokuapp.com
 GET /orders
 ```
 ```
-https:/projeto16-shortly.vercel.app/
+https://boleria.herokuapp.com
 GET /orders/:id
 ```
 ```
-https:/projeto16-shortly.vercel.app/
+https://boleria.herokuapp.com
 GET /clients/:id/orders
 ```
 ```
-https:/projeto16-shortly.vercel.app/
+https://boleria.herokuapp.com
 PATCH /order/:id
 ```
 
