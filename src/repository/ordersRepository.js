@@ -48,16 +48,17 @@ async function getOrder(id) {
     ${COLLECTIONS.ORDERS}."totalPrice",
     ${COLLECTIONS.ORDERS}."createdAt",
     ${COLLECTIONS.ORDERS}."isDelivered",
-    ${COLLECTIONS.ORDERS}.id as ordersId
-      FROM orders 
+    ${COLLECTIONS.ORDERS}.id as ordersid
+      FROM ${COLLECTIONS.ORDERS} 
       inner JOIN ${COLLECTIONS.CLIENTS} ON ${COLLECTIONS.CLIENTS}.id = ${COLLECTIONS.ORDERS}."clientId"
       inner JOIN ${COLLECTIONS.CAKES} ON ${COLLECTIONS.CAKES}.id = ${COLLECTIONS.ORDERS}."cakeId"
-        WHERE ${COLLECTIONS.CLIENTS}.id = $1`,
+        WHERE ${COLLECTIONS.ORDERS}.id = $1`,
     [`${id}`]
   );
   if(Order.rowCount === 0){
     return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
   }
+  
   return Order;
 }
 async function patchOrder(id) {

@@ -15,15 +15,36 @@ async function postNewClient(name, phone, address) {
 }
 
 async function HaveUserOrder(id) {
-  const list = await connection.query(`
-      SELECT * FROM  ${COLLECTIONS.ORDERS}
-      WHERE "clientId" = $1`,
+  console.log(`
+  SELECT 
+  ${COLLECTIONS.ORDERS}.id as orderId,
+    ${COLLECTIONS.ORDERS}.quantity as quantity,
+    ${COLLECTIONS.ORDERS}."createdAt" as createdAt,
+    ${COLLECTIONS.ORDERS}."totalPrice" as totalPrice,
+    ${COLLECTIONS.ORDERS}."isDelivered"as isDelivered,
+    ${COLLECTIONS.CAKES}.name as cakename
+  FROM  orders
+  inner JOIN cakes ON cakes.id = orders."clientId"
+  WHERE "clientId" = $1;
+`)
+  const list = await connection.query(`  SELECT 
+  ${COLLECTIONS.ORDERS}.id as orderId,
+    ${COLLECTIONS.ORDERS}.quantity as quantity,
+    ${COLLECTIONS.ORDERS}."createdAt" as createdAt,
+    ${COLLECTIONS.ORDERS}."totalPrice" as totalPrice,
+    ${COLLECTIONS.ORDERS}."isDelivered"as isDelivered,
+    ${COLLECTIONS.CAKES}.name as cakename
+  FROM  orders
+  inner JOIN cakes ON cakes.id = orders."clientId"
+  WHERE "clientId" = $1;
+`,
     [`${id}`]
   );
   return list;
 }
 
 async function getClient(id) {
+  console.log("ClientQuery order")
   const client = await connection.query(`
       SELECT * FROM ${COLLECTIONS.CLIENTS} 
       WHERE id = $1`,

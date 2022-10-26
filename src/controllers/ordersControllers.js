@@ -16,7 +16,6 @@ async function postOrder(req, res) {
 async function getOrders(req, res) {
   try {
     const Orders = await ordersRepository.getOrders();
-    console.log(Orders)
     return res.status(STATUS_CODE.SUCCESSOK).send(
       Orders.rows.map((order) => {
         return {
@@ -27,6 +26,7 @@ async function getOrders(req, res) {
             phone: order.phone
           },
           cake:{
+            id: order.id,
             name: order.name,
             flavourId: order.flavourId,
             image: order.image,
@@ -52,24 +52,24 @@ async function getOrder(req, res) {
     if (Order.rowCount <= 0) {
       return res.sendStatus(STATUS_CODE.ERRORNOTFOUND);
     }
-    console.log(Order.map())
     return res.status(STATUS_CODE.SUCCESSOK).send(
       Order.rows.map((order) => {
         return {
           client:{
-            id: order.idclient,
+            id: order.id,
             name: order.nameclient,
             address: order.address,
             phone: order.phone
           },
           cake:{
+            cakeid: order.cakeid,
             name: order.name,
             flavourId: order.flavourId,
             image: order.image,
             price: order.price,
             description: order.description,
           },
-          ordersId: order.ordersId,
+          ordersId: order.ordersid,
           quantity: order.quantity,
           totalPrice: order.totalPrice,
           createdAt: order.createdAt,
