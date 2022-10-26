@@ -1,8 +1,8 @@
+![waving](https://capsule-render.vercel.app/api?type=waving&height=200&text=REFSZIN%20&fontAlignY=40&color=gradient)
+<div align="center">
 <h1 align="center">
   La Boleria
 </h1>
-<div align="center">
-
   <h3>Built With</h3>
 
   <img src="https://img.shields.io/badge/Postgres-316192?style=for-the-badge&logo=Postgresql&logoColor=white" height="30px"/>
@@ -12,8 +12,13 @@
   
   <!-- Badges source: https://dev.to/envoy_/150-badges-for-github-pnk -->
 </div>
-<h2>Librariess<h2>
 
+<h1 align="center">Librariess<h1>
+
+- [jsonwebtoken](https://www.npmjs.com/package/express)
+- [nanoid](https://www.npmjs.com/package/express)
+- [pg](https://www.npmjs.com/package/express)
+- [string-strip-html](https://www.npmjs.com/package/express)
 - [express](https://www.npmjs.com/package/express)
 - [cors](https://www.npmjs.com/package/cors)
 - [jwt-simple](https://www.npmjs.com/package/jwt-simple)
@@ -36,10 +41,11 @@ La Boleria is a back-end application, an REST API FULL.
 
 ## Features
 
--   User sign-up and sign-in
--   Create cart.
--   Order Checkout by Cart User id.
--   View products.
+-   CREATE CAKES
+-   CREATE CLIENTS
+-   CREATE ORDERS
+-   CONSULT DELIVERY STATUS
+-   COSULT HISTORY ORDERS
 
 </br>
 
@@ -49,79 +55,44 @@ La Boleria is a back-end application, an REST API FULL.
 
 ```
 https:/projeto16-shortly.vercel.app/
-POST /auth/sign-up
+POST /cakes
 ```
-
-#### Request:
-
-| Body            | Type     | Description                     |
-| :-------------- | :------- | :------------------------------ |
-| `name`          | `string` | **Required**. user name         |
-| `email`         | `string` | **Required**. user email        |
-| `password`      | `string` | **Required**. user password     |
-| `confirmPass`   | `string` | **Required**. user confirmpass  |
-
-#### Response:
-
-```json
-{
-  "message": "User successfully registered!"
-}
 ```
-`confirmPass must match password`
-
-#
-
-### User Sign In
-
+https:/projeto16-shortly.vercel.app/
+POST /clients
 ```
-https://projeto14-smartcell-store-front.vercel.app/
-POST /auth/sign-ip
 ```
-
-#### Request:
-
-| Body            | Type     | Description                     |
-| :-------------- | :------- | :------------------------------ |
-| `email`         | `string` | **Required**. user email        |
-| `password`      | `string` | **Required**. user password     |
-
-#### Response:
-
-```json
-{
-  "token": "bcript authorization token"
-}
+https:/projeto16-shortly.vercel.app/
+POST /order
 ```
-
-#
-### User Sign In
-
 ```
-https://projeto14-smartcell-store-front.vercel.app/
-POST /products
+https:/projeto16-shortly.vercel.app/
+GET /orders
 ```
-
-#### Request:
-
-| Body            | Type     | Description                     |
-| :-------------- | :------- | :------------------------------ |
-
-#### Response:
-
-```json
-{
-  [...Products]
-}
 ```
-
-#
+https:/projeto16-shortly.vercel.app/
+GET /orders/:id
+```
+```
+https:/projeto16-shortly.vercel.app/
+GET /clients/:id/orders
+```
+```
+https:/projeto16-shortly.vercel.app/
+PATCH /order/:id
+```
 
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
+</br>
 `DATABASE_URL = postgres://UserName:Password@Hostname:5432/DatabaseName`
+</br>
 `PORT = number #recommended:5000` 
+</br>
+`NOMEE = PROJECT NAME`
+</br>
+`TOKEN_SECRET="tokenzindex"`
 </br>
 
 ## Run Locally
