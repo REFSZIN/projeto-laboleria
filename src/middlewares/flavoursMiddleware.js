@@ -5,8 +5,9 @@ import {schemaFlavours} from '../schemas/cakesSchemas.js';
 
 async function flavoursMiddleware(req, res, next) {
   const { name } = req.body;
+  const clname = name.trim();
   const newFlavour = {
-    name
+    clname
   };
   const valid = schemaFlavours.validate(newFlavour, {abortEarly: false});
   if(valid.errorMessage){
@@ -20,12 +21,12 @@ async function flavoursMiddleware(req, res, next) {
     const HaveFlavours = await connection.query( `
       SELECT * FROM ${COLLECTIONS.FLAVOURS} WHERE name LIKE $1;
     `,
-      [`${name}`]
+      [`${clname}`]
     );
     if (HaveFlavours.rowCount > 0) {
       return  res.sendStatus(STATUS_CODE.ERRORCONFLICT);
     }
-    if ( name.length <= 1) {
+    if (clname.length <= 1) {
       return  res.sendStatus(STATUS_CODE.ERRORBADREQUEST);
     }
     next();

@@ -5,6 +5,12 @@ import { schemaCakes } from '../schemas/cakesSchemas.js';
 
 async function cakesMiddleware(req, res, next) {
   const { name, price, image, description, flavourId } = req.body;
+  if (
+    price === null || price === undefined || typeof(price) !== 'number' ||
+    flavourId === null || flavourId === undefined || typeof(flavourId) !== 'number' ||
+    description.length === 0 || name.length === 0) {
+    return res.sendStatus(STATUS_CODE.ERRORBADREQUEST);
+  }
   const newCake = {
     name, price, image, description, flavourId
   };
